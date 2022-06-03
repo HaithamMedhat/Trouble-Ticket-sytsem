@@ -39,7 +39,7 @@ export default function Login() {
      let {data } = await axios.post(
         `https://trouble-ticketing-system.herokuapp.com/signIn`,
         user
-      ).catch(err => setErrorApiResponse(true))
+      ).catch(err => {setErrorApiResponse(true);   setLoading(false);})
       if (data.message === "success") {
         authCtx.login(data.token);
         authCtx.assignRole(data.data.role);
@@ -55,30 +55,18 @@ export default function Login() {
         } 
         if(data.data.role === 'H_O'){
           navigate('/officeHeaderHome');
-        } 
-
-
-        
+        }  
         setErrorList([]);
         setLoading(false);
         setErrorList([]);
         setError("");
         setLoading(false);
-      } else {
-        // setError(validatioForm.error.details);
+      } else { 
         setErrorList(data.message);
         setLoading(false);
     }
   }
-  function validateRegisterForm(user) {
-    let scheme = Joi.object({
-      email: Joi.string().email({
-        tlds: { allow: ["com", "net", "eg", "org"] },
-      }),
-      password: Joi.string().pattern(new RegExp("^[A-Z][a-z][1-9]{3,30}$")),
-    });
-    return scheme.validate(user, { abortEarly: false });
-  }
+  
   return (
    <>
   <Mainbg>
@@ -123,7 +111,7 @@ export default function Login() {
           <div className="my-2">
             {error && <div className="alert alert-danger py-2">{error}</div>}
           </div>
-          {/* {errorList.map((error, i) =>
+          {errorList.map((error, i) =>
             error.context.label === "password" ? (
               <div key={i} className="alert alert-danger py-2 m-2">
                 incorrect password
@@ -133,7 +121,7 @@ export default function Login() {
                 {error.message}
               </div>
             )
-          )} */}
+          )}
           <Input
           type={"email"}
           name={"email"}
